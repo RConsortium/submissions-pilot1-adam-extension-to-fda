@@ -80,27 +80,6 @@ adas2 <- adas1 %>%
   create_var_from_codelist(adadas_spec, AVISIT, AVISITN) %>% # derive AVISITN from codelist
   create_var_from_codelist(adadas_spec, PARAM, PARAMN) # derive PARAMN from codelist
 
-# derive PARAMCD=ACTOT, DTYPE=LOCF
-# A dataset with combinations of PARAMCD, AVISIT which are expected.
-actot_expected_obsv <- tibble::tribble(
-  ~PARAMCD, ~AVISITN, ~AVISIT,
-  "ACTOT", 0, "Baseline",
-  "ACTOT", 8, "Week 8",
-  "ACTOT", 16, "Week 16",
-  "ACTOT", 24, "Week 24"
-)
-
-adas_locf <- derive_locf_records(
-  data = adas2,
-  dataset_expected_obs = actot_expected_obsv,
-  by_vars = exprs(
-    STUDYID, SITEID, SITEGR1, USUBJID, TRTSDT, TRTEDT,
-    TRTP, TRTPN, AGE, AGEGR1, AGEGR1N, RACE, RACEN, SEX,
-    ITTFL, EFFFL, COMP24FL, PARAMCD
-  ),
-  order = exprs(AVISITN, AVISIT),
-  keep_vars = exprs(VISIT, VISITNUM, ADY, ADT, PARAM, PARAMN, QSSEQ)
-)
 
 ## derive AWRANGE/AWTARGET/AWTDIFF/AWLO/AWHI/AWU
 aw_lookup <- tribble(
@@ -112,7 +91,7 @@ aw_lookup <- tribble(
 )
 
 adas3 <- derive_vars_merged(
-  adas_locf,
+  adas2,
   dataset_add = aw_lookup,
   by_vars = exprs(AVISIT)
 ) %>%
@@ -122,8 +101,60 @@ adas3 <- derive_vars_merged(
   )
 
 
-## baseline information BASE/CHG/PCHG
+## ANL01FL
 adas4 <- adas3 %>%
+  mutate(diff = AWTARGET - ADY) %>%
+  restrict_derivation(
+    derivation = derive_var_extreme_flag,
+    args = params(
+      by_vars = exprs(USUBJID, PARAMCD, AVISIT),
+      order = exprs(AWTDIFF, diff),
+      new_var = ANL01FL,
+      mode = "first"
+    ),
+    filter = !is.na(AVISIT)
+  )
+
+# derive PARAMCD=ACTOT, DTYPE=LOCF
+# A dataset with combinations of PARAMCD, AVISIT which are expected.
+actot_expected_obsv <- tibble::tribble(
+  ~PARAMCD, ~AVISITN, ~AVISIT,
+  "ACTOT", 0, "Baseline",
+  "ACTOT", 8, "Week 8",
+  "ACTOT", 16, "Week 16",
+  "ACTOT", 24, "Week 24"
+)
+
+adas_locf2 <- adas4 %>%
+  restrict_derivation(
+    derivation = derive_locf_records,
+    args = params(
+      dataset_expected_obs = actot_expected_obsv,
+      by_vars = exprs(
+        STUDYID, SITEID, SITEGR1, USUBJID, TRTSDT, TRTEDT,
+        TRTP, TRTPN, AGE, AGEGR1, AGEGR1N, RACE, RACEN, SEX,
+        ITTFL, EFFFL, COMP24FL, PARAMCD
+      ),
+      order = exprs(AVISITN, AVISIT),
+      keep_vars = exprs(VISIT, VISITNUM, ADY, ADT, PARAM, PARAMN, QSSEQ)
+    ),
+    filter = !is.na(ANL01FL)
+  ) %>%
+  ################# assign ANL01FL for new records
+  mutate(ANL01FL = if_else(is.na(DTYPE), ANL01FL, "Y")) %>%
+  ################# re-derive AWRANGE/AWTARGET/AWTDIFF/AWLO/AWHI/AWU
+  select(-c("AWRANGE", "AWTARGET", "AWLO", "AWHI")) %>%
+  derive_vars_merged(
+    dataset_add = aw_lookup,
+    by_vars = exprs(AVISIT)
+  ) %>%
+  mutate(
+    AWTDIFF = abs(AWTARGET - ADY),
+    AWU = "DAYS"
+  )
+
+## baseline information BASE/CHG/PCHG
+adas5 <- adas_locf2 %>%
   # Calculate BASE
   derive_var_base(
     by_vars = exprs(STUDYID, USUBJID, PARAMCD),
@@ -141,19 +172,7 @@ adas4 <- adas3 %>%
     filter = is.na(ABLFL)
   )
 
-## ANL01FL
-adas5 <- adas4 %>%
-  mutate(diff = AWTARGET - ADY) %>%
-  restrict_derivation(
-    derivation = derive_var_extreme_flag,
-    args = params(
-      by_vars = exprs(USUBJID, PARAMCD, AVISIT),
-      order = exprs(AWTDIFF, diff),
-      new_var = ANL01FL,
-      mode = "first"
-    ),
-    filter = !is.na(AVISIT)
-  )
+
 
 ## out to XPT
 adas5 %>%
