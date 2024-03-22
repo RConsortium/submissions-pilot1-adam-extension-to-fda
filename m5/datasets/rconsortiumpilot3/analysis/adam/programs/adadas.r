@@ -25,7 +25,7 @@ library(metacore)
 library(metatools)
 library(stringr)
 library(xportr)
-library(pilot3)
+library(pilot3utils)
 
 dm <- haven::read_xpt(file.path(path$sdtm, "dm.xpt"))
 qs <- haven::read_xpt(file.path(path$sdtm, "qs.xpt"))
@@ -37,7 +37,7 @@ adsl <- convert_blanks_to_na(adsl)
 
 
 ## origin=predecessor, use metatool::build_from_derived()
-metacore <- spec_to_metacore(file.path(path$adam, "ADaM - Pilot 3.xlsx"), where_sep_sheet = FALSE)
+metacore <- spec_to_metacore(file.path(path$adam, "adam-pilot-3.xlsx"), where_sep_sheet = FALSE)
 # Get the specifications for the dataset we are currently building
 adadas_spec <- metacore %>%
   select_dataset("ADADAS")
