@@ -29,7 +29,7 @@ library(dplyr)
 library(ggplot2)
 library(cowplot)
 library(visR)
-library(pilot3)
+library(pilot3utils)
 
 
 ## ------------------------------------------------------------------------------------------------------------------------------

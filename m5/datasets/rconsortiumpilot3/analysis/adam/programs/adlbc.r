@@ -47,7 +47,7 @@ supplb <- convert_blanks_to_na(read_xpt(file.path(path$sdtm, "supplb.xpt")))
 adsl <- convert_blanks_to_na(read_xpt(file.path(path$adam, "adsl.xpt")))
 
 # create labels
-metacore <- spec_to_metacore(file.path(path$adam, "ADaM - Pilot 3.xlsx"), where_sep_sheet = FALSE, quiet = TRUE)
+metacore <- spec_to_metacore(file.path(path$adam, "adam-pilot-3.xlsx"), where_sep_sheet = FALSE, quiet = TRUE)
 
 adlbc_spec <- metacore %>%
   select_dataset("ADLBC")

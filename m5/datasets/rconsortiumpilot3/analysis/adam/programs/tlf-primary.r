@@ -17,7 +17,7 @@ library(tidyr)
 library(dplyr)
 library(Tplyr)
 library(pharmaRTF)
-library(pilot3)
+library(pilot3utils)
 
 ## ------------------------------------------------------------------------------------------------------------------------------
 options(huxtable.add_colnames = FALSE)

@@ -24,7 +24,7 @@ library(dplyr)
 library(tidyr)
 library(metacore)
 library(metatools)
-library(pilot3)
+library(pilot3utils)
 library(xportr)
 
 # read source -------------------------------------------------------------
@@ -36,7 +36,7 @@ ds <- convert_blanks_to_na(read_xpt(file.path(path$sdtm, "ds.xpt")))
 
 ## placeholder for origin=predecessor, use metatool::build_from_derived()
 
-metacore <- spec_to_metacore(file.path(path$adam, "ADaM - Pilot 3.xlsx"), where_sep_sheet = FALSE)
+metacore <- spec_to_metacore(file.path(path$adam, "adam-pilot-3.xlsx"), where_sep_sheet = FALSE)
 
 # Get the specifications for the dataset we are currently building
 
