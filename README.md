@@ -21,13 +21,14 @@ To learn more about other pilots, visit the [R Consortium R Submission Working G
 
 - Initial submission
   + version: [v0.1.0] (**link TBC**)
-  + [Cover letter](https://github.com/RConsortium/submissions-pilot3-adam-to-fda/blob/main/m1/us/cover-letter.pdf) (**Draft version**)
+  + [Cover letter](https://github.com/RConsortium/submissions-pilot3-adam-to-fda/blob/main/m1/us/cover-letter.pdf)
+ 
+- [FDA response letter](https://github.com/RConsortium/submissions-wg/blob/main/_Documents/Summary_R_Pilot3_Submission.pdf)
   
 ## Re-run analysis 
 
-To re-run analysis, you can follow the steps described in the 
-[ADRG] (**link TBC**) based on the 
-[programs saved in module 5](https://github.com/RConsortium/submissions-pilot3-adam-to-fda/tree/main/m5/datasets/rconsortiumpilot1/analysis/adam/programs). 
+To re-run analysis, you can follow the steps described in the [ADRG](https://github.com/RConsortium/submissions-pilot3-adam-to-fda/blob/main/m5/datasets/rconsortiumpilot3/analysis/adam/datasets/adrg.pdf) based on the 
+[programs saved in module 5](https://github.com/RConsortium/submissions-pilot3-adam-to-fda/blob/main/m5/datasets/rconsortiumpilot3/analysis/adam/programs). 
 
 ## Folder Structure 
 
@@ -41,6 +42,7 @@ eCTD package:
 m1
 └── us
     ├── cover-letter.pdf  # Submission cover letter
+    ├── response-FDA-IR-pilot3.pdf  # FDA feedback from initial submission
     └── report-tlf-pilot3.pdf    # Submission TLFs 
 ```
 
@@ -84,7 +86,7 @@ m5
         └── analysis
             └── adam
                 ├── datasets
-                |   ├── ADaM - Pilot 3.xlsx
+                |   ├── adam-pilot-3.xlsx
                 |   ├── define.xml
                 |   ├── adrg.pdf
                 |   ├── adadas.xpt                    # ADaM datasets in XPT format
@@ -103,7 +105,8 @@ m5
                     ├── tlf-efficacy.R
                     ├── tlf-kmplot.R
                     ├── tlf-primary.R
-                    └── renv.lock
+                    ├── pilot3utils_0.0.2.zip
+                    └── renv-lock.txt
 ```
 Other files: (**Do not include in eCTD package**)
 
